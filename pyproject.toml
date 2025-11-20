@@ -29,11 +29,18 @@ dependencies = [
     "cloudpickle",
     "setuptools",
     "pyarrow",
-    "faiss-gpu",
+    "faiss-cpu",
     "cryptography",
     "numba>=0.60.0"
 ]
 dynamic = ["version"]
+
+[project.optional-dependencies]
+gpu = [
+    # Note: faiss-gpu is not available via pip, install via conda:
+    # conda install -c pytorch faiss-gpu
+    # Or build from source: https://github.com/facebookresearch/faiss
+]
 
 [project.urls]
 Homepage = "https://github.com/Phylliida/OpenClio.git"

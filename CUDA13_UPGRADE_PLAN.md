@@ -18,7 +18,7 @@ This document provides a concrete plan to upgrade OpenClio to support CUDA 13.
 
 #### pyproject.toml Changes
 
-Replace the dependencies section with:
+**Note:** `faiss-gpu` is not available on PyPI. We keep `faiss-cpu` as default and document GPU installation via conda.
 
 ```toml
 dependencies = [
@@ -36,15 +36,19 @@ dependencies = [
     "cloudpickle",
     "setuptools",
     "pyarrow",
-    "faiss-gpu",  # Changed from faiss-cpu
+    "faiss-cpu",  # Default: CPU version (GPU via conda - see FAISS_GPU_INSTALLATION.md)
     "cryptography",
     "numba>=0.60.0"  # Latest version with CUDA 13 support
+]
+
+[project.optional-dependencies]
+gpu = [
+    # Note: faiss-gpu is not available via pip, install via conda:
+    # conda install -c pytorch faiss-gpu
 ]
 ```
 
 #### setup.py Changes
-
-Update `install_requires`:
 
 ```python
 install_requires = [
@@ -64,7 +68,7 @@ install_requires = [
     "cloudpickle", 
     "setuptools", 
     "pyarrow", 
-    "faiss-gpu"  # Changed from faiss-cpu
+    "faiss-cpu"  # Default: CPU version (GPU via conda)
 ]
 ```
 
@@ -120,11 +124,12 @@ def fit(self, X, y=None):
    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu131
    ```
 
-3. **Install FAISS GPU:**
+3. **Install FAISS GPU (via Conda - not available via pip):**
    ```bash
-   pip install faiss-gpu
-   # If CUDA 13 specific version available:
-   # pip install faiss-gpu-cu13
+   # FAISS GPU is not available on PyPI, use conda instead:
+   conda install -c pytorch faiss-gpu
+   
+   # See FAISS_GPU_INSTALLATION.md for detailed instructions
    ```
 
 4. **Install vLLM:**
